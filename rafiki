@@ -10,7 +10,7 @@
 #   Version: 1.0                            #
 #############################################
 
-cat /home/hispamanu/cansina/rafiki/style
+cat /home/[user]/cansina/rafiki/style
 echo " "
 echo "
 ==================================
