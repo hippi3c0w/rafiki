@@ -1,0 +1,112 @@
+#!/bin/bash
+#############################################
+#											#
+#   Rafiki is a script that shows you all   #
+#   info about the server in where you      #
+#   execute it                              #
+#											#
+#   Made by: Manu Alén-@hippi3c0w           #
+#   manualen@protonmail.com                 #
+#   Version: 1.0                            #
+#############################################
+
+cat /home/hispamanu/cansina/rafiki/style
+echo " "
+echo "
+==================================
+Made by: Manu Alén-@hippi3c0w
+manualen@protonmail.com
+Version: 1.0
+=================================="
+echo " "
+
+#####################
+#    Color Vars     #
+#####################
+
+#Color variables
+BLACK='\033[0;30m'
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+ORANGE='\033[0;33m'
+PURPLE='\033[0;34m'
+CYAN='\033[0;35m'
+LIGHTGRAY='\033[0;36m'
+NC='\033[0m'
+DARKGRAY='\033[1;30m'
+LIGHTRED='\033[1;31m'
+LIGHTGREEN='\033[1;32m'
+LIGHTORANGE='\033[1;33m'
+LIGHTPURPLE='\033[1;34m'
+LIGHTCYAN='\033[1;35m'
+#####################
+#        VARS	    #
+#####################
+
+manufacturer=`dmidecode -s system-manufacturer`
+productname=`dmidecode -s system-product-name`
+productversion=`dmidecode -s system-version`
+serienumber=`dmidecode -s system-serial-number`
+procinfo=`cat /proc/cpuinfo | grep "vendor_id" | uniq; cat /proc/cpuinfo | grep "model name" | uniq; cat /proc/cpuinfo | grep "cpu MHz" | uniq`
+procdev=`cat /proc/cpuinfo | egrep -io --color=auto "(vmx|svm)" | uniq`
+ramsize=`free -th`
+partitionsize=`df -kh`
+swapinfo=`swapon -s`
+distroinfo=`lsb_release -ir| cut -d ":" -f2 | sed -e 's/^[ \t]*//'| xargs`
+kernelinfo=`uname -sr`
+usblist=`lsusb`
+privateip=`ip a | grep "inet " | sed -e 's/^[ \t]*//' | cut -d " " -f2 | grep -v "127"`
+countprivate=`ip a | grep "inet " | sed -e 's/^[ \t]*//' | cut -d " " -f2 | grep -v "127" | wc -l`
+publicip=`curl ifconfig.me 2> /dev/null`
+
+######################
+#    Code logic      #
+######################
+
+echo -e "${GREEN}Product info:${NC} " $manufacturer $productname $productversion $serienumber
+echo -e "${GREEN}Processor info:${NC} " $(echo " ")
+echo -n "$procinfo"
+echo " "
+sleep 2
+if [[ $procdev=="vmx" ]];then
+echo -e "${GREEN}Processor by:${NC} Intel"
+fi
+if [[ $procdev=="svm" ]];then
+echo -e "${GREEN}Processor by:${NC} AMD"
+fi
+sleep 2
+echo -e "${GREEN}Memory information:${NC} "
+echo " "
+echo -n "$ramsize"
+echo " "
+echo -e "${GREEN}Partition info:${NC} "
+echo " "
+echo -n "$partitionsize"
+echo " "
+sleep 2
+echo -e "${GREEN}Swap info:${NC} "
+echo " "
+echo -n "$swapinfo"
+echo " "
+echo -e "${GREEN}Distro Info:${NC} " $distroinfo
+echo " "
+echo -e "${GREEN}Kernel info:${NC} " $kernelinfo
+echo " "
+sleep 2
+echo -e "${GREEN}USB List:${NC} "
+echo " "
+echo -n "$usblist"
+echo " "
+
+if [[ $countprivate -gt 1 ]];then 
+echo -e "${GREEN}Private IPs:${NC} "
+echo " "
+echo -n "$privateip"
+echo " "
+echo " "
+else
+echo -e "${GREEN}Private IP:${NC} " $privateip
+echo " "
+fi
+
+echo -e "${GREEN}Public IP:${NC} " $publicip
