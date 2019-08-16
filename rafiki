@@ -10,7 +10,7 @@
 #   Version: 1.0                            #
 #############################################
 
-cat /home/[user]/cansina/rafiki/style
+cat cat /var/partera/pretty/rafiki/style
 echo " "
 echo "
 ==================================
